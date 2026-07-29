@@ -90,7 +90,8 @@ El repositorio está en GitHub: https://github.com/Vitelio57/Reglamento (privado
   ```bash
   sudo systemctl restart reglamento-hotel
   ```
-- **Actualizar la app**: en la carpeta clonada (`~/reglamento-hotel`) ejecuta:
+- **Actualizar la app**: en la carpeta clonada (por ejemplo `/root/reglamento-hotel` si
+  trabajas como root, o `~/reglamento-hotel` con un usuario normal) ejecuta:
   ```bash
   ./update.sh
   ```
@@ -98,23 +99,21 @@ El repositorio está en GitHub: https://github.com/Vitelio57/Reglamento (privado
   automáticamente, reiniciando el servicio sin borrar la carpeta `data/` (documentos y
   PDFs firmados se conservan). No necesita ningún dato adicional: usa las mismas
   credenciales de Git que ya quedaron guardadas al clonar el repositorio la primera vez.
-  Si prefieres actualizar en dos pasos manuales, sigue funcionando:
+  Funciona tanto si lo ejecutas como `root` directamente como con un usuario normal
+  (en ese caso usa `sudo` internamente). Si prefieres actualizar en dos pasos manuales,
+  sigue funcionando:
   ```bash
   git pull
-  sudo ./install.sh
+  ./install.sh          # o "sudo ./install.sh" si no eres root
   ```
 - **Automatizar la actualización (opcional)**: para que el servidor revise cambios solo,
-  agrega una tarea programada con `crontab -e` (como el usuario que clonó el repo, sin sudo),
-  por ejemplo para revisar todos los días a las 4 a.m.:
+  agrega una tarea programada con `crontab -e` (como root, ya que solo tienes ese usuario
+  en el servidor), por ejemplo para revisar todos los días a las 4 a.m.:
   ```
-  0 4 * * * cd /home/usuario/reglamento-hotel && ./update.sh >> /home/usuario/update.log 2>&1
+  0 4 * * * cd /root/reglamento-hotel && ./update.sh >> /root/update.log 2>&1
   ```
-  Nota: `update.sh` llama a `sudo ./install.sh`, y cron no puede escribir la contraseña de
-  sudo por ti. Para que la tarea programada funcione sin intervención, autoriza ese comando
-  puntual sin contraseña con `sudo visudo` agregando (cambia `usuario` por el usuario real):
-  ```
-  usuario ALL=(root) NOPASSWD: /home/usuario/reglamento-hotel/install.sh
-  ```
+  Como cron corre como root, no hay ningún problema con contraseñas de `sudo`: el script
+  detecta que ya eres root y ejecuta `install.sh` directamente.
 - **Cambiar el puerto ya instalado**: edita `/etc/systemd/system/reglamento-hotel.service`,
   cambia `Environment=PORT=...`, luego:
   ```bash
