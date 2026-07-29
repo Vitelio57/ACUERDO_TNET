@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Reglamento de Hospedaje - Hotel Mansión del Viajero</title>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<header class="cabecera">
+  <h1>HOTEL MANSIÓN DEL VIAJERO</h1>
+  <p>Corporación H&amp;D S.A.</p>
+</header>
+
+<main class="contenedor">
+
+  <!-- Pantalla 1: selección de idioma -->
+  <section id="pantalla-idioma" class="pantalla pantalla-centrada">
+    <h2 id="texto-seleccion-idioma">Selecciona el idioma / Select your language</h2>
+    <div class="botonera-idioma">
+      <button id="btn-idioma-es" class="boton boton-grande" type="button">Español</button>
+      <button id="btn-idioma-en" class="boton boton-grande" type="button">English</button>
+    </div>
+  </section>
+
+  <!-- Pantalla 2: reglamento + formulario + firma -->
+  <section id="pantalla-reglamento" class="pantalla" hidden>
+    <div class="tarjeta">
+      <div class="encabezado-reglamento">
+        <div>
+          <h2 id="titulo-hotel"></h2>
+          <p id="subtitulo-empresa"></p>
+        </div>
+        <button id="btn-cambiar-idioma" class="boton boton-secundario" type="button"></button>
+      </div>
+      <h3 id="titulo-documento" class="titulo-documento"></h3>
+
+      <div id="secciones-reglamento" class="secciones"></div>
+
+      <h4 id="titulo-declaracion" class="titulo-declaracion">Declaración de Aceptación</h4>
+      <p id="texto-declaracion" class="texto-declaracion"></p>
+
+      <form id="formulario-firma" class="formulario">
+        <div class="campo">
+          <label id="label-nombre" for="input-nombre"></label>
+          <input id="input-nombre" type="text" maxlength="120" autocomplete="off" />
+        </div>
+        <div class="campo">
+          <label id="label-documento" for="input-documento"></label>
+          <input id="input-documento" type="text" maxlength="60" autocomplete="off" />
+        </div>
+        <div class="campo">
+          <label id="label-habitacion" for="input-habitacion"></label>
+          <input id="input-habitacion" type="text" maxlength="20" autocomplete="off" />
+        </div>
+
+        <div class="campo campo-checkbox">
+          <input id="check-aceptacion" type="checkbox" />
+          <label id="label-aceptacion" for="check-aceptacion"></label>
+        </div>
+
+        <div class="campo">
+          <label id="label-firma" class="label-firma"></label>
+          <canvas id="canvas-firma" class="canvas-firma"></canvas>
+          <button id="btn-limpiar-firma" class="boton boton-secundario" type="button"></button>
+        </div>
+
+        <p id="mensaje-error" class="mensaje-error" hidden></p>
+
+        <button id="btn-firmar" class="boton boton-grande boton-firmar" type="button"></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Pantalla 3: éxito -->
+  <section id="pantalla-exito" class="pantalla pantalla-centrada" hidden>
+    <div class="tarjeta tarjeta-exito">
+      <h2 id="exito-titulo"></h2>
+      <p id="exito-texto"></p>
+      <div class="botonera-exito">
+        <a id="btn-descargar-pdf" class="boton boton-grande" href="#" target="_blank" rel="noopener"></a>
+        <button id="btn-nuevo-documento" class="boton boton-grande boton-secundario" type="button"></button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <a href="/admin.html">Ver documentos firmados</a>
+</footer>
+
+<script src="/vendor/signature_pad.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
