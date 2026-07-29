@@ -15,7 +15,15 @@ const PORT = process.env.PORT || 8095;
 const app = express();
 
 app.disable('x-powered-by');
-app.use(helmet());
+app.use(
+  helmet({
+    // Sin este ajuste, el navegador intenta cargar CSS/JS por HTTPS y falla (el servidor solo usa HTTP en la LAN).
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: { upgradeInsecureRequests: null },
+    },
+  })
+);
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
