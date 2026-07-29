@@ -92,11 +92,29 @@ El repositorio está en GitHub: https://github.com/Vitelio57/Reglamento (privado
   ```
 - **Actualizar la app**: en la carpeta clonada (`~/reglamento-hotel`) ejecuta:
   ```bash
+  ./update.sh
+  ```
+  Este script hace `git pull` de la última versión y vuelve a ejecutar el instalador
+  automáticamente, reiniciando el servicio sin borrar la carpeta `data/` (documentos y
+  PDFs firmados se conservan). No necesita ningún dato adicional: usa las mismas
+  credenciales de Git que ya quedaron guardadas al clonar el repositorio la primera vez.
+  Si prefieres actualizar en dos pasos manuales, sigue funcionando:
+  ```bash
   git pull
   sudo ./install.sh
   ```
-  El instalador vuelve a copiar los archivos a `/opt/reglamento-hotel` y reinicia el servicio,
-  sin borrar la carpeta `data/` existente (documentos y PDFs firmados se conservan).
+- **Automatizar la actualización (opcional)**: para que el servidor revise cambios solo,
+  agrega una tarea programada con `crontab -e` (como el usuario que clonó el repo, sin sudo),
+  por ejemplo para revisar todos los días a las 4 a.m.:
+  ```
+  0 4 * * * cd /home/usuario/reglamento-hotel && ./update.sh >> /home/usuario/update.log 2>&1
+  ```
+  Nota: `update.sh` llama a `sudo ./install.sh`, y cron no puede escribir la contraseña de
+  sudo por ti. Para que la tarea programada funcione sin intervención, autoriza ese comando
+  puntual sin contraseña con `sudo visudo` agregando (cambia `usuario` por el usuario real):
+  ```
+  usuario ALL=(root) NOPASSWD: /home/usuario/reglamento-hotel/install.sh
+  ```
 - **Cambiar el puerto ya instalado**: edita `/etc/systemd/system/reglamento-hotel.service`,
   cambia `Environment=PORT=...`, luego:
   ```bash
