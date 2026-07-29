@@ -54,6 +54,11 @@ body {
   gap: 24px;
 }
 
+/* .pantalla-centrada usa display:flex, que sin esto anularia el atributo hidden */
+.pantalla[hidden] {
+  display: none;
+}
+
 .botonera-idioma {
   display: flex;
   gap: 16px;
