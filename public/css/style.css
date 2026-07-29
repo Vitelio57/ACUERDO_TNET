@@ -265,6 +265,21 @@ body {
   font-weight: 600;
 }
 
+.boton-eliminar {
+  margin-left: 10px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background: var(--color-error);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.boton-eliminar:active {
+  opacity: 0.85;
+}
+
 @media (min-width: 640px) {
   .campo {
     max-width: 480px;

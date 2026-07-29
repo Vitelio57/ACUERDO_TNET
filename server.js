@@ -5,14 +5,22 @@ const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { randomUUID } = require('crypto');
+const crypto = require('crypto');
 
 const REGLAMENTO = require('./src/reglamento');
 const { generarPdf } = require('./src/pdf');
 const store = require('./src/store');
 
 const PORT = process.env.PORT || 8095;
+const ADMIN_DELETE_PASSWORD = process.env.ADMIN_DELETE_PASSWORD || 'Guatemala123456';
 const app = express();
+
+function passwordValida(intento) {
+  const a = Buffer.from(String(intento || ''));
+  const b = Buffer.from(ADMIN_DELETE_PASSWORD);
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(a, b);
+}
 
 app.disable('x-powered-by');
 app.use(
@@ -50,8 +58,8 @@ app.post('/api/firmar', firmarLimiter, async (req, res) => {
     const documentoLimpio = String(documento || '').trim().slice(0, 60);
     const habitacionLimpia = String(habitacion || '').trim().slice(0, 20);
 
-    if (!nombreLimpio || !documentoLimpio) {
-      return res.status(400).json({ error: 'Nombre y documento de identidad son obligatorios.' });
+    if (!nombreLimpio || !documentoLimpio || !habitacionLimpia) {
+      return res.status(400).json({ error: 'Nombre, documento de identidad y número de habitación son obligatorios.' });
     }
     if (aceptado !== true) {
       return res.status(400).json({ error: 'Debe aceptar el reglamento antes de firmar.' });
@@ -65,7 +73,7 @@ app.post('/api/firmar', firmarLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Firma inválida.' });
     }
 
-    const id = randomUUID();
+    const id = crypto.randomUUID();
     const fecha = new Date();
 
     const registro = {
@@ -104,6 +112,31 @@ app.get('/api/documentos/:id/pdf', (req, res) => {
   }
   res.setHeader('Content-Type', 'application/pdf');
   res.sendFile(pdfPath);
+});
+
+const eliminarLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.delete('/api/documentos/:id', eliminarLimiter, (req, res) => {
+  const { id } = req.params;
+  if (!UUID_RE.test(id)) {
+    return res.status(400).json({ error: 'Identificador inválido.' });
+  }
+
+  const { password } = req.body || {};
+  if (!passwordValida(password)) {
+    return res.status(401).json({ error: 'Contraseña incorrecta.' });
+  }
+
+  const eliminado = store.eliminarRegistro(id);
+  if (!eliminado) {
+    return res.status(404).json({ error: 'Documento no encontrado.' });
+  }
+  res.json({ ok: true });
 });
 
 app.listen(PORT, () => {

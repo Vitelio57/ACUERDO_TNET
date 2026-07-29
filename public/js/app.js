@@ -110,9 +110,17 @@ function actualizarDeclaracion() {
     .replace(/{{habitacion}}/g, habitacion);
 }
 
-[inputNombre, inputDocumento, inputHabitacion].forEach((el) =>
-  el.addEventListener('input', actualizarDeclaracion)
-);
+// Documento y habitación son numéricos: se filtra cualquier caracter que no sea dígito
+// antes de refrescar la declaración, para que el texto nunca muestre letras coladas.
+function soloDigitos(e) {
+  const limpio = e.target.value.replace(/\D/g, '');
+  if (limpio !== e.target.value) e.target.value = limpio;
+  actualizarDeclaracion();
+}
+
+inputNombre.addEventListener('input', actualizarDeclaracion);
+inputDocumento.addEventListener('input', soloDigitos);
+inputHabitacion.addEventListener('input', soloDigitos);
 
 btnEs.addEventListener('click', () => cargarIdioma('es'));
 btnEn.addEventListener('click', () => cargarIdioma('en'));
@@ -136,7 +144,7 @@ btnFirmar.addEventListener('click', async () => {
   const documento = inputDocumento.value.trim();
   const habitacion = inputHabitacion.value.trim();
 
-  if (!nombre || !documento) {
+  if (!nombre || !documento || !habitacion) {
     mostrarError(c.ui.errorCampos);
     return;
   }

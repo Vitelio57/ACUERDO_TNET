@@ -28,8 +28,22 @@ function listarRegistros() {
   return leerRegistros().sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 }
 
+function eliminarRegistro(id) {
+  const registros = leerRegistros();
+  const indice = registros.findIndex((r) => r.id === id);
+  if (indice === -1) return false;
+
+  registros.splice(indice, 1);
+  fs.writeFileSync(DB_FILE, JSON.stringify(registros, null, 2), 'utf8');
+
+  const pdfPath = rutaPdf(id);
+  if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+
+  return true;
+}
+
 function rutaPdf(id) {
   return path.join(PDF_DIR, `${id}.pdf`);
 }
 
-module.exports = { agregarRegistro, listarRegistros, rutaPdf };
+module.exports = { agregarRegistro, listarRegistros, eliminarRegistro, rutaPdf };

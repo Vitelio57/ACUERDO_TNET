@@ -29,7 +29,14 @@ async function cargarDocumentos() {
     link.rel = 'noopener';
     link.textContent = 'Ver / Descargar PDF';
     link.className = 'enlace-pdf';
-    tdAcciones.appendChild(link);
+
+    const btnEliminar = document.createElement('button');
+    btnEliminar.type = 'button';
+    btnEliminar.className = 'boton-eliminar';
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.addEventListener('click', () => eliminarDocumento(r.id));
+
+    tdAcciones.append(link, btnEliminar);
 
     tr.append(tdFecha, tdNombre, tdDocumento, tdHabitacion, tdIdioma, tdAcciones);
     tbody.appendChild(tr);
@@ -42,6 +49,27 @@ async function cargarDocumentos() {
     td.textContent = 'Aún no hay documentos firmados.';
     tr.appendChild(td);
     tbody.appendChild(tr);
+  }
+}
+
+async function eliminarDocumento(id) {
+  const password = prompt('Ingrese la contraseña para eliminar este documento:');
+  if (password === null) return;
+
+  try {
+    const resp = await fetch(`/api/documentos/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => ({}));
+      alert(data.error || 'No se pudo eliminar el documento.');
+      return;
+    }
+    cargarDocumentos();
+  } catch {
+    alert('Error de conexión al intentar eliminar el documento.');
   }
 }
 
