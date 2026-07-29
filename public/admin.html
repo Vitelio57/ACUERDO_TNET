@@ -14,9 +14,30 @@
 
 <main class="contenedor">
   <div class="tarjeta">
+    <div class="barra-filtros">
+      <div class="campo-filtro">
+        <label for="filtro-nombre">Nombre</label>
+        <input id="filtro-nombre" type="text" placeholder="Buscar por nombre..." autocomplete="off" />
+      </div>
+      <div class="campo-filtro">
+        <label for="filtro-desde">Desde</label>
+        <input id="filtro-desde" type="date" />
+      </div>
+      <div class="campo-filtro">
+        <label for="filtro-hasta">Hasta</label>
+        <input id="filtro-hasta" type="date" />
+      </div>
+      <button id="btn-limpiar-filtros" class="boton boton-secundario" type="button">Limpiar filtros</button>
+    </div>
+
+    <div class="barra-acciones">
+      <button id="btn-eliminar-seleccionados" class="boton-eliminar" type="button" disabled>Eliminar seleccionados (0)</button>
+    </div>
+
     <table class="tabla-documentos">
       <thead>
         <tr>
+          <th><input id="check-todos" type="checkbox" /></th>
           <th>Fecha</th>
           <th>Nombre</th>
           <th>Documento</th>
@@ -27,6 +48,12 @@
       </thead>
       <tbody id="cuerpo-tabla"></tbody>
     </table>
+
+    <div class="barra-paginacion">
+      <button id="btn-pagina-anterior" class="boton boton-secundario" type="button">« Anterior</button>
+      <span id="texto-pagina"></span>
+      <button id="btn-pagina-siguiente" class="boton boton-secundario" type="button">Siguiente »</button>
+    </div>
   </div>
 </main>
 

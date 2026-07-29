@@ -139,6 +139,29 @@ app.delete('/api/documentos/:id', eliminarLimiter, (req, res) => {
   res.json({ ok: true });
 });
 
+app.post('/api/documentos/eliminar-masivo', eliminarLimiter, (req, res) => {
+  const { ids, password } = req.body || {};
+
+  if (!passwordValida(password)) {
+    return res.status(401).json({ error: 'Contraseña incorrecta.' });
+  }
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'Debe indicar al menos un documento a eliminar.' });
+  }
+  if (ids.length > 200) {
+    return res.status(400).json({ error: 'Demasiados documentos seleccionados a la vez.' });
+  }
+
+  let eliminados = 0;
+  for (const id of ids) {
+    if (typeof id === 'string' && UUID_RE.test(id) && store.eliminarRegistro(id)) {
+      eliminados += 1;
+    }
+  }
+
+  res.json({ eliminados });
+});
+
 app.listen(PORT, () => {
   console.log(`Reglamento Hotel Mansión del Viajero escuchando en el puerto ${PORT}`);
 });

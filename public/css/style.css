@@ -280,6 +280,52 @@ body {
   opacity: 0.85;
 }
 
+.boton-eliminar:disabled {
+  background: #c9a3a0;
+  cursor: not-allowed;
+}
+
+.barra-filtros {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0d6c5;
+}
+
+.campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.campo-filtro label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.campo-filtro input {
+  padding: 8px 10px;
+  border: 1px solid #cbbfa9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.barra-acciones {
+  margin-bottom: 12px;
+}
+
+.barra-paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+
 @media (min-width: 640px) {
   .campo {
     max-width: 480px;

@@ -72,6 +72,11 @@ El repositorio está en GitHub: https://github.com/Vitelio57/Reglamento (privado
 - **Ver documentos firmados**: enlace "Ver documentos firmados" al pie de la página principal,
   o directamente `http://IP:8095/admin.html`. Desde ahí se puede abrir/descargar el PDF de cada firma,
   o **eliminarlo** con el botón "Eliminar" (pide la contraseña de administración).
+- **Filtros y paginación**: se puede buscar por nombre y por rango de fechas (Desde/Hasta);
+  los resultados se muestran de 10 en 10 con botones "Anterior/Siguiente".
+- **Borrado masivo**: se pueden marcar varios documentos con las casillas de la izquierda
+  (o la casilla del encabezado para marcar todos los de la página) y eliminarlos juntos con
+  "Eliminar seleccionados", pidiendo la contraseña una sola vez.
 - **Contraseña para eliminar documentos**: por defecto `Guatemala123456`. Se puede cambiar
   definiendo `ADMIN_DELETE_PASSWORD` en `/etc/systemd/system/reglamento-hotel.service`
   (o en un archivo `.env` junto a `server.js` para pruebas locales) y reiniciando el servicio.
