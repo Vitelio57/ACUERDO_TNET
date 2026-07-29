@@ -35,16 +35,18 @@ sudo APP_PORT=8110 ./install.sh
 
 ## Instalación en Ubuntu Server (Proxmox → VM Ubuntu Server)
 
-1. Copia esta carpeta completa al servidor Ubuntu, por ejemplo con `scp` o `rsync` desde tu PC:
-   ```bash
-   scp -r "Documento de reglamento" usuario@IP_DEL_SERVIDOR:~/reglamento-hotel
-   ```
-2. Conéctate por SSH al servidor y entra en la carpeta copiada:
+El repositorio está en GitHub: https://github.com/Vitelio57/Reglamento (privado).
+
+1. Conéctate por SSH a la VM Ubuntu Server y clona el repositorio directamente:
    ```bash
    ssh usuario@IP_DEL_SERVIDOR
+   sudo apt-get update -y && sudo apt-get install -y git
+   git clone https://github.com/Vitelio57/Reglamento.git reglamento-hotel
    cd reglamento-hotel
    ```
-3. Da permisos de ejecución al instalador y ejecútalo como root:
+   Como el repositorio es privado, Git pedirá autenticación: usa tu usuario de GitHub y un
+   [token de acceso personal](https://github.com/settings/tokens) (no la contraseña de la cuenta).
+2. Da permisos de ejecución al instalador y ejecútalo como root:
    ```bash
    chmod +x install.sh
    sudo ./install.sh
@@ -79,8 +81,13 @@ sudo APP_PORT=8110 ./install.sh
   ```bash
   sudo systemctl restart reglamento-hotel
   ```
-- **Actualizar la app** (tras copiar cambios nuevos a la carpeta original): vuelve a ejecutar
-  `sudo ./install.sh` — no borra la carpeta `data/` existente.
+- **Actualizar la app**: en la carpeta clonada (`~/reglamento-hotel`) ejecuta:
+  ```bash
+  git pull
+  sudo ./install.sh
+  ```
+  El instalador vuelve a copiar los archivos a `/opt/reglamento-hotel` y reinicia el servicio,
+  sin borrar la carpeta `data/` existente (documentos y PDFs firmados se conservan).
 - **Cambiar el puerto ya instalado**: edita `/etc/systemd/system/reglamento-hotel.service`,
   cambia `Environment=PORT=...`, luego:
   ```bash
