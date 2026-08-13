@@ -72,11 +72,8 @@ function renderPagina() {
     const tdDocumento = document.createElement('td');
     tdDocumento.textContent = r.documento;
 
-    const tdHabitacion = document.createElement('td');
-    tdHabitacion.textContent = r.habitacion || 'N/A';
-
-    const tdIdioma = document.createElement('td');
-    tdIdioma.textContent = r.idioma === 'en' ? 'Inglés' : 'Español';
+    const tdDireccion = document.createElement('td');
+    tdDireccion.textContent = r.direccion || r.habitacion || 'N/A';
 
     const tdAcciones = document.createElement('td');
     const link = document.createElement('a');
@@ -94,14 +91,14 @@ function renderPagina() {
 
     tdAcciones.append(link, btnEliminar);
 
-    tr.append(tdCheck, tdFecha, tdNombre, tdDocumento, tdHabitacion, tdIdioma, tdAcciones);
+    tr.append(tdCheck, tdFecha, tdNombre, tdDocumento, tdDireccion, tdAcciones);
     tbody.appendChild(tr);
   });
 
   if (!registrosPagina.length) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
-    td.colSpan = 7;
+    td.colSpan = 6;
     td.textContent = todosLosRegistros.length ? 'Ningún documento coincide con los filtros.' : 'Aún no hay documentos firmados.';
     tr.appendChild(td);
     tbody.appendChild(tr);

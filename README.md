@@ -1,18 +1,19 @@
-# Reglamento de Hospedaje — Hotel Mansión del Viajero
+# Acta de Instalacion de Fibra Optica e Internet
 
-Aplicación web (sin inicio de sesión) para que los huéspedes lean el reglamento interno
-del hotel en **español o inglés**, lo acepten y lo **firmen con el dedo** en una tablet de
-recepción. El documento firmado se guarda en el servidor y se puede **ver/descargar en PDF**
-en cualquier momento desde el panel de documentos.
+Aplicacion web (sin inicio de sesion) para que el cliente lea y firme en una tablet o celular
+el documento de instalacion de internet por fibra optica. La firma deja constancia de que los
+equipos entregados o instalados siguen siendo propiedad de la empresa y deben devolverse al
+terminar el servicio. El documento firmado se guarda en el servidor y se puede ver o descargar
+en PDF en cualquier momento desde el panel de documentos.
 
 - Empresa: **Corporación H&D S.A.**
-- Hotel: **Hotel Mansión del Viajero**
+- Documento: **Acta de entrega, instalacion y responsabilidad de equipos**
 
 ## Estructura del proyecto
 
 ```
 server.js               Servidor Express (API + estáticos)
-src/reglamento.js        Contenido legal y textos ES/EN
+src/reglamento.js        Contenido legal y textos en espanol
 src/pdf.js                Generación del PDF firmado (pdfkit)
 src/store.js               Guardado de registros (data/registros.json) y PDFs (data/pdfs/)
 public/                    Frontend (index.html = firma, admin.html = documentos firmados)

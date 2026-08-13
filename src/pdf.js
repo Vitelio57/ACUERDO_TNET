@@ -26,14 +26,14 @@ function generarPdf(registro, destino) {
     const declaracion = contenido.declaracion
       .replace(/{{nombre}}/g, registro.nombre)
       .replace(/{{documento}}/g, registro.documento)
-      .replace(/{{habitacion}}/g, registro.habitacion || 'N/A');
+      .replace(/{{direccion}}/g, registro.direccion || registro.habitacion || 'N/A');
     doc.fontSize(10).font('Helvetica').text(declaracion, { align: 'justify' });
     doc.moveDown();
 
-    const fechaTexto = new Date(registro.fecha).toLocaleString(registro.idioma === 'en' ? 'en-US' : 'es-ES');
+    const fechaTexto = new Date(registro.fecha).toLocaleString('es-ES');
     doc.fontSize(10).font('Helvetica-Bold').text(`${contenido.campos.nombre}: `, { continued: true }).font('Helvetica').text(registro.nombre);
     doc.font('Helvetica-Bold').text(`${contenido.campos.documento}: `, { continued: true }).font('Helvetica').text(registro.documento);
-    doc.font('Helvetica-Bold').text(`${contenido.campos.habitacion}: `, { continued: true }).font('Helvetica').text(registro.habitacion || 'N/A');
+    doc.font('Helvetica-Bold').text(`${contenido.campos.direccion}: `, { continued: true }).font('Helvetica').text(registro.direccion || registro.habitacion || 'N/A');
     doc.font('Helvetica-Bold').text(`${contenido.campos.fecha}: `, { continued: true }).font('Helvetica').text(fechaTexto);
     doc.moveDown();
 

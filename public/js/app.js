@@ -8,8 +8,8 @@ const pantallaReglamento = document.getElementById('pantalla-reglamento');
 const pantallaExito = document.getElementById('pantalla-exito');
 
 const btnEs = document.getElementById('btn-idioma-es');
-const btnEn = document.getElementById('btn-idioma-en');
-const btnCambiarIdioma = document.getElementById('btn-cambiar-idioma');
+const textoSeleccionIdioma = document.getElementById('texto-seleccion-idioma');
+const textoIntro = document.getElementById('texto-intro');
 
 const tituloHotel = document.getElementById('titulo-hotel');
 const subtituloEmpresa = document.getElementById('subtitulo-empresa');
@@ -20,10 +20,10 @@ const textoDeclaracion = document.getElementById('texto-declaracion');
 
 const inputNombre = document.getElementById('input-nombre');
 const inputDocumento = document.getElementById('input-documento');
-const inputHabitacion = document.getElementById('input-habitacion');
+const inputDireccion = document.getElementById('input-direccion');
 const labelNombre = document.getElementById('label-nombre');
 const labelDocumento = document.getElementById('label-documento');
-const labelHabitacion = document.getElementById('label-habitacion');
+const labelDireccion = document.getElementById('label-direccion');
 const checkAceptacion = document.getElementById('check-aceptacion');
 const labelAceptacion = document.getElementById('label-aceptacion');
 const labelFirma = document.getElementById('label-firma');
@@ -60,7 +60,7 @@ function resizeCanvas() {
 async function cargarIdioma(lang) {
   const resp = await fetch(`/api/reglamento/${lang}`);
   const contenido = await resp.json();
-  state.idioma = lang;
+  state.idioma = 'es';
   state.contenido = contenido;
   renderReglamento();
   pantallaIdioma.hidden = true;
@@ -70,6 +70,9 @@ async function cargarIdioma(lang) {
 
 function renderReglamento() {
   const c = state.contenido;
+  textoSeleccionIdioma.textContent = c.ui.pantallaInicialTitulo;
+  textoIntro.textContent = c.ui.pantallaInicialTexto;
+  btnEs.textContent = c.ui.botonContinuar;
   tituloHotel.textContent = c.hotel;
   subtituloEmpresa.textContent = c.empresa;
   tituloDocumento.textContent = c.tituloDocumento;
@@ -89,12 +92,11 @@ function renderReglamento() {
 
   labelNombre.textContent = c.campos.nombre;
   labelDocumento.textContent = c.campos.documento;
-  labelHabitacion.textContent = c.campos.habitacion;
+  labelDireccion.textContent = c.campos.direccion;
   labelFirma.textContent = c.ui.firmeAqui;
   labelAceptacion.textContent = c.ui.aceptacion;
   btnLimpiarFirma.textContent = c.ui.botonLimpiarFirma;
   btnFirmar.textContent = c.ui.botonFirmar;
-  btnCambiarIdioma.textContent = c.ui.botonCambiarIdioma;
 
   actualizarDeclaracion();
 }
@@ -103,11 +105,11 @@ function actualizarDeclaracion() {
   const c = state.contenido;
   const nombre = inputNombre.value.trim() || '_____________';
   const documento = inputDocumento.value.trim() || '_____________';
-  const habitacion = inputHabitacion.value.trim() || 'N/A';
+  const direccion = inputDireccion.value.trim() || '_____________';
   textoDeclaracion.textContent = c.declaracion
     .replace(/{{nombre}}/g, nombre)
     .replace(/{{documento}}/g, documento)
-    .replace(/{{habitacion}}/g, habitacion);
+    .replace(/{{direccion}}/g, direccion);
 }
 
 // Documento y habitación son numéricos: se filtra cualquier caracter que no sea dígito
@@ -120,14 +122,9 @@ function soloDigitos(e) {
 
 inputNombre.addEventListener('input', actualizarDeclaracion);
 inputDocumento.addEventListener('input', soloDigitos);
-inputHabitacion.addEventListener('input', soloDigitos);
+inputDireccion.addEventListener('input', actualizarDeclaracion);
 
 btnEs.addEventListener('click', () => cargarIdioma('es'));
-btnEn.addEventListener('click', () => cargarIdioma('en'));
-btnCambiarIdioma.addEventListener('click', () => {
-  pantallaReglamento.hidden = true;
-  pantallaIdioma.hidden = false;
-});
 
 btnLimpiarFirma.addEventListener('click', () => signaturePad.clear());
 
@@ -142,9 +139,9 @@ btnFirmar.addEventListener('click', async () => {
 
   const nombre = inputNombre.value.trim();
   const documento = inputDocumento.value.trim();
-  const habitacion = inputHabitacion.value.trim();
+  const direccion = inputDireccion.value.trim();
 
-  if (!nombre || !documento || !habitacion) {
+  if (!nombre || !documento || !direccion) {
     mostrarError(c.ui.errorCampos);
     return;
   }
@@ -166,7 +163,7 @@ btnFirmar.addEventListener('click', async () => {
       body: JSON.stringify({
         nombre,
         documento,
-        habitacion,
+        direccion,
         idioma: state.idioma,
         aceptado: true,
         firmaBase64,
@@ -199,7 +196,7 @@ function mostrarExito(pdfUrl) {
 btnNuevoDocumento.addEventListener('click', () => {
   inputNombre.value = '';
   inputDocumento.value = '';
-  inputHabitacion.value = '';
+  inputDireccion.value = '';
   checkAceptacion.checked = false;
   if (signaturePad) signaturePad.clear();
   mensajeError.hidden = true;

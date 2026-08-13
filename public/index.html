@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Reglamento de Hospedaje - Hotel Mansión del Viajero</title>
+<title>Acta de Instalacion - Fibra Optica e Internet</title>
 <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 <header class="cabecera">
-  <h1>HOTEL MANSIÓN DEL VIAJERO</h1>
+  <h1>INSTALACION DE FIBRA OPTICA E INTERNET</h1>
   <p>Corporación H&amp;D S.A.</p>
 </header>
 
 <main class="contenedor">
 
-  <!-- Pantalla 1: selección de idioma -->
+  <!-- Pantalla 1: inicio -->
   <section id="pantalla-idioma" class="pantalla pantalla-centrada">
-    <h2 id="texto-seleccion-idioma">Selecciona el idioma / Select your language</h2>
+    <h2 id="texto-seleccion-idioma">Documento de instalacion y resguardo de equipos</h2>
+    <p id="texto-intro">Revise el documento antes de firmar la entrega e instalacion del servicio.</p>
     <div class="botonera-idioma">
-      <button id="btn-idioma-es" class="boton boton-grande" type="button">Español</button>
-      <button id="btn-idioma-en" class="boton boton-grande" type="button">English</button>
+      <button id="btn-idioma-es" class="boton boton-grande" type="button">Continuar</button>
     </div>
   </section>
 
-  <!-- Pantalla 2: reglamento + formulario + firma -->
+  <!-- Pantalla 2: documento + formulario + firma -->
   <section id="pantalla-reglamento" class="pantalla" hidden>
     <div class="tarjeta">
       <div class="encabezado-reglamento">
@@ -31,7 +31,6 @@
           <h2 id="titulo-hotel"></h2>
           <p id="subtitulo-empresa"></p>
         </div>
-        <button id="btn-cambiar-idioma" class="boton boton-secundario" type="button"></button>
       </div>
       <h3 id="titulo-documento" class="titulo-documento"></h3>
 
@@ -50,8 +49,8 @@
           <input id="input-documento" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="60" autocomplete="off" />
         </div>
         <div class="campo">
-          <label id="label-habitacion" for="input-habitacion"></label>
-          <input id="input-habitacion" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="20" autocomplete="off" required />
+          <label id="label-direccion" for="input-direccion"></label>
+          <input id="input-direccion" type="text" maxlength="180" autocomplete="off" required />
         </div>
 
         <div class="campo campo-checkbox">

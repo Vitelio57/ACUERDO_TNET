@@ -38,8 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 app.get('/api/reglamento/:lang', (req, res) => {
-  const lang = req.params.lang === 'en' ? 'en' : 'es';
-  res.json(REGLAMENTO[lang]);
+  res.json(REGLAMENTO.es);
 });
 
 const firmarLimiter = rateLimit({
@@ -51,18 +50,17 @@ const firmarLimiter = rateLimit({
 
 app.post('/api/firmar', firmarLimiter, async (req, res) => {
   try {
-    const { nombre, documento, habitacion, idioma, aceptado, firmaBase64 } = req.body || {};
+    const { nombre, documento, direccion, habitacion, aceptado, firmaBase64 } = req.body || {};
 
-    const lang = idioma === 'en' ? 'en' : 'es';
     const nombreLimpio = String(nombre || '').trim().slice(0, 120);
     const documentoLimpio = String(documento || '').trim().slice(0, 60);
-    const habitacionLimpia = String(habitacion || '').trim().slice(0, 20);
+    const direccionLimpia = String(direccion || habitacion || '').trim().slice(0, 180);
 
-    if (!nombreLimpio || !documentoLimpio || !habitacionLimpia) {
-      return res.status(400).json({ error: 'Nombre, documento de identidad y número de habitación son obligatorios.' });
+    if (!nombreLimpio || !documentoLimpio || !direccionLimpia) {
+      return res.status(400).json({ error: 'Nombre, documento de identidad y direccion de instalacion son obligatorios.' });
     }
     if (aceptado !== true) {
-      return res.status(400).json({ error: 'Debe aceptar el reglamento antes de firmar.' });
+      return res.status(400).json({ error: 'Debe aceptar el documento antes de firmar.' });
     }
     if (typeof firmaBase64 !== 'string' || !firmaBase64.startsWith('data:image/png;base64,')) {
       return res.status(400).json({ error: 'La firma es obligatoria.' });
@@ -80,8 +78,8 @@ app.post('/api/firmar', firmarLimiter, async (req, res) => {
       id,
       nombre: nombreLimpio,
       documento: documentoLimpio,
-      habitacion: habitacionLimpia,
-      idioma: lang,
+      direccion: direccionLimpia,
+      idioma: 'es',
       fecha: fecha.toISOString(),
     };
 
@@ -163,5 +161,5 @@ app.post('/api/documentos/eliminar-masivo', eliminarLimiter, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Reglamento Hotel Mansión del Viajero escuchando en el puerto ${PORT}`);
+  console.log(`Acta de instalacion de fibra optica escuchando en el puerto ${PORT}`);
 });
