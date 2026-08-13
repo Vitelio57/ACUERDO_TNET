@@ -8,8 +8,15 @@
 </head>
 <body>
 <header class="cabecera">
-  <h1>INSTALACION DE FIBRA OPTICA E INTERNET</h1>
-  <p>Panel de documentos firmados</p>
+  <div class="cabecera-marca">
+    <div class="logo-marco">
+      <img src="/logo.png" alt="Logo DUSK" class="logo-empresa" />
+    </div>
+    <div>
+      <h1>INSTALACION DE FIBRA OPTICA E INTERNET</h1>
+      <p>Panel de documentos firmados</p>
+    </div>
+  </div>
 </header>
 
 <main class="contenedor">
@@ -34,19 +41,21 @@
       <button id="btn-eliminar-seleccionados" class="boton-eliminar" type="button" disabled>Eliminar seleccionados (0)</button>
     </div>
 
-    <table class="tabla-documentos">
-      <thead>
-        <tr>
-          <th><input id="check-todos" type="checkbox" /></th>
-          <th>Fecha</th>
-          <th>Nombre</th>
-          <th>Documento</th>
-          <th>Direccion</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="cuerpo-tabla"></tbody>
-    </table>
+    <div class="tabla-scroll">
+      <table class="tabla-documentos">
+        <thead>
+          <tr>
+            <th><input id="check-todos" type="checkbox" /></th>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Direccion</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla"></tbody>
+      </table>
+    </div>
 
     <div class="barra-paginacion">
       <button id="btn-pagina-anterior" class="boton boton-secundario" type="button">« Anterior</button>
