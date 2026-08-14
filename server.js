@@ -55,21 +55,17 @@ const firmarLimiter = rateLimit({
 
 app.post('/api/firmar', firmarLimiter, async (req, res) => {
   try {
-    const { nombre, documento, direccion, habitacion, problema, cambioRouter, tipo, aceptado, firmaBase64 } = req.body || {};
+    const { nombre, direccion, habitacion, problema, cambioRouter, tipo, aceptado, firmaBase64 } = req.body || {};
 
     const tipoDoc = tipo === 'reparacion' ? 'reparacion' : 'instalacion';
 
     const nombreLimpio = String(nombre || '').trim().slice(0, 120);
-    const documentoLimpio = String(documento || '').trim().slice(0, 60);
     const direccionLimpia = String(direccion || habitacion || '').trim().slice(0, 180);
     const problemaLimpio = String(problema || '').trim().slice(0, 240);
     const cambioRouterMarcado = cambioRouter === true;
 
     if (!nombreLimpio || !direccionLimpia) {
       return res.status(400).json({ error: 'Nombre y direccion son obligatorios.' });
-    }
-    if (tipoDoc === 'instalacion' && !documentoLimpio) {
-      return res.status(400).json({ error: 'El documento de identidad es obligatorio para instalacion.' });
     }
     if (tipoDoc === 'reparacion' && !problemaLimpio) {
       return res.status(400).json({ error: 'Debe ingresar el problema reportado para la reparacion.' });
@@ -93,7 +89,6 @@ app.post('/api/firmar', firmarLimiter, async (req, res) => {
       id,
       tipo: tipoDoc,
       nombre: nombreLimpio,
-      documento: documentoLimpio,
       direccion: direccionLimpia,
       problema: problemaLimpio,
       cambioRouter: cambioRouterMarcado,

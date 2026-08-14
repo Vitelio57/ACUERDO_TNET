@@ -47,10 +47,9 @@ const REGLAMENTO = {
     ],
     declaracionTitulo: 'Declaracion de Aceptacion',
     declaracion:
-      'Yo, {{nombre}}, identificado(a) con documento de identidad N.° {{documento}}, titular de la instalacion realizada en la direccion {{direccion}}, declaro que he leido y comprendido en su totalidad el presente documento de entrega e instalacion de equipos de internet por fibra optica de Corporación H&D S.A. Asimismo, acepto que la caja digital, la fibra optica, el router y cualquier otro equipo o accesorio entregado o instalado son propiedad de la empresa y me obligo a devolverlos cuando el servicio sea cancelado o finalizado. En caso de no hacerlo, acepto que se me registre la deuda correspondiente en el sistema para su cobro.',
+      'Yo, {{nombre}}, titular de la instalacion realizada en la direccion {{direccion}}, declaro que he leido y comprendido en su totalidad el presente documento de entrega e instalacion de equipos de internet por fibra optica de Corporación H&D S.A. Asimismo, acepto que la caja digital, la fibra optica, el router y cualquier otro equipo o accesorio entregado o instalado son propiedad de la empresa y me obligo a devolverlos cuando el servicio sea cancelado o finalizado. En caso de no hacerlo, acepto que se me registre la deuda correspondiente en el sistema para su cobro.',
     campos: {
       nombre: 'Nombre completo',
-      documento: 'N.° de identificacion',
       direccion: 'Direccion de instalacion',
       fecha: 'Fecha',
       firma: 'Firma',
@@ -71,7 +70,7 @@ const REGLAMENTO = {
       errorGenerico: 'Ocurrió un error. Intente nuevamente.',
       errorAceptacion: 'Debe marcar la casilla de aceptacion antes de continuar.',
       errorFirma: 'Debe firmar en el recuadro antes de continuar.',
-      errorCampos: 'Complete el nombre, el numero de documento y la direccion de instalacion.',
+      errorCampos: 'Complete el nombre y la direccion de instalacion.',
       verDocumentos: 'Ver documentos firmados',
     },
   },

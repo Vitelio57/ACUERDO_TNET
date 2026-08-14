@@ -21,11 +21,9 @@ const tituloDeclaracion = document.getElementById('titulo-declaracion');
 const textoDeclaracion = document.getElementById('texto-declaracion');
 
 const inputNombre = document.getElementById('input-nombre');
-const inputDocumento = document.getElementById('input-documento');
 const inputDireccion = document.getElementById('input-direccion');
 const inputProblema = document.getElementById('input-problema');
 const labelNombre = document.getElementById('label-nombre');
-const labelDocumento = document.getElementById('label-documento');
 const labelDireccion = document.getElementById('label-direccion');
 const labelProblema = document.getElementById('label-problema');
 const campoProblema = document.getElementById('campo-problema');
@@ -102,7 +100,6 @@ function renderReglamento() {
   });
 
   labelNombre.textContent = c.campos.nombre;
-  labelDocumento.textContent = c.campos.documento || 'N.° de identificacion';
   labelDireccion.textContent = c.campos.direccion;
   labelProblema.textContent = c.campos.problema || 'Problema reportado';
   labelCambioRouter.textContent = c.campos.cambioRouter || '';
@@ -111,7 +108,6 @@ function renderReglamento() {
   btnLimpiarFirma.textContent = c.ui.botonLimpiarFirma;
   btnFirmar.textContent = c.ui.botonFirmar;
 
-  inputDocumento.parentElement.hidden = esReparacion;
   campoProblema.hidden = !esReparacion;
   campoCambioRouter.hidden = !esReparacion;
 
@@ -121,28 +117,17 @@ function renderReglamento() {
 function actualizarDeclaracion() {
   const c = state.contenido;
   const nombre = inputNombre.value.trim() || '_____________';
-  const documento = inputDocumento.value.trim() || '_____________';
   const direccion = inputDireccion.value.trim() || '_____________';
   const problema = inputProblema.value.trim() || '_____________';
   const cambioRouterEstado = checkCambioRouter.checked ? 'SI' : 'NO';
   textoDeclaracion.textContent = c.declaracion
     .replace(/{{nombre}}/g, nombre)
-    .replace(/{{documento}}/g, documento)
     .replace(/{{direccion}}/g, direccion)
     .replace(/{{problema}}/g, problema)
     .replace(/{{cambioRouterEstado}}/g, cambioRouterEstado);
 }
 
-// Documento y habitación son numéricos: se filtra cualquier caracter que no sea dígito
-// antes de refrescar la declaración, para que el texto nunca muestre letras coladas.
-function soloDigitos(e) {
-  const limpio = e.target.value.replace(/\D/g, '');
-  if (limpio !== e.target.value) e.target.value = limpio;
-  actualizarDeclaracion();
-}
-
 inputNombre.addEventListener('input', actualizarDeclaracion);
-inputDocumento.addEventListener('input', soloDigitos);
 inputDireccion.addEventListener('input', actualizarDeclaracion);
 inputProblema.addEventListener('input', actualizarDeclaracion);
 checkCambioRouter.addEventListener('change', actualizarDeclaracion);
@@ -162,12 +147,11 @@ btnFirmar.addEventListener('click', async () => {
   mostrarError('');
 
   const nombre = inputNombre.value.trim();
-  const documento = inputDocumento.value.trim();
   const direccion = inputDireccion.value.trim();
   const problema = inputProblema.value.trim();
   const esReparacion = state.tipo === 'reparacion';
 
-  if (!nombre || !direccion || (!esReparacion && !documento) || (esReparacion && !problema)) {
+  if (!nombre || !direccion || (esReparacion && !problema)) {
     mostrarError(c.ui.errorCampos);
     return;
   }
@@ -188,7 +172,6 @@ btnFirmar.addEventListener('click', async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nombre,
-        documento,
         direccion,
         problema,
         cambioRouter: checkCambioRouter.checked,
@@ -224,7 +207,6 @@ function mostrarExito(pdfUrl) {
 
 btnNuevoDocumento.addEventListener('click', () => {
   inputNombre.value = '';
-  inputDocumento.value = '';
   inputDireccion.value = '';
   inputProblema.value = '';
   checkCambioRouter.checked = false;

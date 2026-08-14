@@ -25,7 +25,6 @@ function generarPdf(registro, destino) {
     doc.fontSize(11).font('Helvetica-Bold').text(contenido.declaracionTitulo);
     const declaracion = contenido.declaracion
       .replace(/{{nombre}}/g, registro.nombre)
-      .replace(/{{documento}}/g, registro.documento)
       .replace(/{{direccion}}/g, registro.direccion || registro.habitacion || 'N/A')
       .replace(/{{problema}}/g, registro.problema || 'N/A')
       .replace(/{{cambioRouterEstado}}/g, registro.cambioRouter ? 'SI' : 'NO');
@@ -34,9 +33,6 @@ function generarPdf(registro, destino) {
 
     const fechaTexto = new Date(registro.fecha).toLocaleString('es-ES');
     doc.fontSize(10).font('Helvetica-Bold').text(`${contenido.campos.nombre}: `, { continued: true }).font('Helvetica').text(registro.nombre);
-    if (contenido.campos.documento) {
-      doc.font('Helvetica-Bold').text(`${contenido.campos.documento}: `, { continued: true }).font('Helvetica').text(registro.documento || 'N/A');
-    }
     doc.font('Helvetica-Bold').text(`${contenido.campos.direccion}: `, { continued: true }).font('Helvetica').text(registro.direccion || registro.habitacion || 'N/A');
     if (registro.tipo === 'reparacion') {
       doc.font('Helvetica-Bold').text(`${contenido.campos.problema}: `, { continued: true }).font('Helvetica').text(registro.problema || 'N/A');
