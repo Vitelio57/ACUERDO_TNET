@@ -1,9 +1,10 @@
-// Contenido legal y textos de interfaz del acta de instalacion, solo en espanol.
-// {{nombre}}, {{documento}} y {{direccion}} son reemplazados al firmar y al generar el PDF.
+// Contenido legal y textos de interfaz para instalacion y reparacion, solo en espanol.
+// Las plantillas usan marcadores {{...}} reemplazados al firmar y al generar el PDF.
 
 const REGLAMENTO = {
-  es: {
+  instalacion: {
     idioma: 'es',
+    tipo: 'instalacion',
     hotel: 'INSTALACION DE FIBRA OPTICA E INTERNET',
     empresa: 'Corporación H&D S.A.',
     tituloDocumento: 'Acta de Entrega, Instalacion y Responsabilidad de Equipos',
@@ -55,9 +56,10 @@ const REGLAMENTO = {
       firma: 'Firma',
     },
     ui: {
-      pantallaInicialTitulo: 'Documento de instalacion y resguardo de equipos',
-      pantallaInicialTexto: 'Revise el documento antes de firmar la entrega e instalacion del servicio.',
-      botonContinuar: 'Continuar',
+      pantallaInicialTitulo: 'Seleccione el tipo de acta',
+      pantallaInicialTexto: 'Elija si va a firmar instalacion o reparacion del servicio.',
+      botonInstalacion: 'Instalacion',
+      botonReparacion: 'Reparacion',
       aceptacion: 'He leido y acepto las condiciones de instalacion, uso y devolucion de los equipos.',
       botonLimpiarFirma: 'Limpiar firma',
       botonFirmar: 'Firmar y guardar',
@@ -70,6 +72,66 @@ const REGLAMENTO = {
       errorAceptacion: 'Debe marcar la casilla de aceptacion antes de continuar.',
       errorFirma: 'Debe firmar en el recuadro antes de continuar.',
       errorCampos: 'Complete el nombre, el numero de documento y la direccion de instalacion.',
+      verDocumentos: 'Ver documentos firmados',
+    },
+  },
+
+  reparacion: {
+    idioma: 'es',
+    tipo: 'reparacion',
+    hotel: 'ACTA DE REPARACION DE SERVICIO',
+    empresa: 'Corporación H&D S.A.',
+    tituloDocumento: 'Constancia de Reparacion y Conformidad del Cliente',
+    secciones: [
+      {
+        titulo: '1. Objeto del acta',
+        texto:
+          'Este documento deja constancia de que se atendio y reparo el servicio reportado por el cliente en su domicilio.',
+      },
+      {
+        titulo: '2. Problema reportado',
+        texto:
+          'El tecnico registra manualmente el problema presentado por el cliente y las acciones realizadas durante la visita tecnica.',
+      },
+      {
+        titulo: '3. Cambio de router',
+        texto:
+          'Si se marca la opcion de cambio de router, el cliente reconoce que ya recibio un reemplazo y no tendra derecho a solicitar otro cambio de router por el mismo motivo.',
+      },
+      {
+        titulo: '4. Conformidad',
+        texto:
+          'Con su firma, el cliente confirma que la reparacion fue realizada y que recibio la explicacion correspondiente del tecnico.',
+      },
+    ],
+    declaracionTitulo: 'Declaracion de Conformidad de Reparacion',
+    declaracion:
+      'Yo, {{nombre}}, titular del servicio en la direccion {{direccion}}, declaro que el problema reportado fue: "{{problema}}". Confirmo que el tecnico realizo la reparacion correspondiente y recibo el servicio en condiciones de funcionamiento al momento de firmar. Cambio de router aplicado: {{cambioRouterEstado}}. Entiendo que, al marcarse esta opcion, no tengo derecho a un nuevo cambio de router por el mismo motivo.',
+    campos: {
+      nombre: 'Nombre del cliente',
+      direccion: 'Direccion del servicio',
+      problema: 'Problema reportado',
+      cambioRouter: 'Cambio de router realizado (sin derecho a otro cambio por el mismo motivo)',
+      fecha: 'Fecha',
+      firma: 'Firma del cliente',
+    },
+    ui: {
+      pantallaInicialTitulo: 'Seleccione el tipo de acta',
+      pantallaInicialTexto: 'Elija si va a firmar instalacion o reparacion del servicio.',
+      botonInstalacion: 'Instalacion',
+      botonReparacion: 'Reparacion',
+      aceptacion: 'Confirmo que la reparacion fue realizada y acepto el contenido de esta constancia.',
+      botonLimpiarFirma: 'Limpiar firma',
+      botonFirmar: 'Firmar y guardar',
+      firmeAqui: 'Firme dentro del recuadro con el dedo',
+      exitoTitulo: 'Acta de reparacion firmada correctamente',
+      exitoTexto: 'La constancia de reparacion fue guardada correctamente.',
+      botonDescargarPdf: 'Descargar PDF',
+      botonNuevoDocumento: 'Firmar otro documento',
+      errorGenerico: 'Ocurrió un error. Intente nuevamente.',
+      errorAceptacion: 'Debe marcar la casilla de conformidad antes de continuar.',
+      errorFirma: 'Debe firmar en el recuadro antes de continuar.',
+      errorCampos: 'Complete nombre, direccion y problema reportado.',
       verDocumentos: 'Ver documentos firmados',
     },
   },

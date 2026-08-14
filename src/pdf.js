@@ -4,7 +4,7 @@ const REGLAMENTO = require('./reglamento');
 
 function generarPdf(registro, destino) {
   return new Promise((resolve, reject) => {
-    const contenido = REGLAMENTO[registro.idioma] || REGLAMENTO.es;
+    const contenido = registro.tipo === 'reparacion' ? REGLAMENTO.reparacion : REGLAMENTO.instalacion;
     const doc = new PDFDocument({ size: 'LETTER', margin: 50 });
     const stream = fs.createWriteStream(destino);
     doc.pipe(stream);
@@ -26,14 +26,26 @@ function generarPdf(registro, destino) {
     const declaracion = contenido.declaracion
       .replace(/{{nombre}}/g, registro.nombre)
       .replace(/{{documento}}/g, registro.documento)
-      .replace(/{{direccion}}/g, registro.direccion || registro.habitacion || 'N/A');
+      .replace(/{{direccion}}/g, registro.direccion || registro.habitacion || 'N/A')
+      .replace(/{{problema}}/g, registro.problema || 'N/A')
+      .replace(/{{cambioRouterEstado}}/g, registro.cambioRouter ? 'SI' : 'NO');
     doc.fontSize(10).font('Helvetica').text(declaracion, { align: 'justify' });
     doc.moveDown();
 
     const fechaTexto = new Date(registro.fecha).toLocaleString('es-ES');
     doc.fontSize(10).font('Helvetica-Bold').text(`${contenido.campos.nombre}: `, { continued: true }).font('Helvetica').text(registro.nombre);
-    doc.font('Helvetica-Bold').text(`${contenido.campos.documento}: `, { continued: true }).font('Helvetica').text(registro.documento);
+    if (contenido.campos.documento) {
+      doc.font('Helvetica-Bold').text(`${contenido.campos.documento}: `, { continued: true }).font('Helvetica').text(registro.documento || 'N/A');
+    }
     doc.font('Helvetica-Bold').text(`${contenido.campos.direccion}: `, { continued: true }).font('Helvetica').text(registro.direccion || registro.habitacion || 'N/A');
+    if (registro.tipo === 'reparacion') {
+      doc.font('Helvetica-Bold').text(`${contenido.campos.problema}: `, { continued: true }).font('Helvetica').text(registro.problema || 'N/A');
+      doc
+        .font('Helvetica-Bold')
+        .text(`${contenido.campos.cambioRouter}: `, { continued: true })
+        .font('Helvetica')
+        .text(registro.cambioRouter ? 'SI' : 'NO');
+    }
     doc.font('Helvetica-Bold').text(`${contenido.campos.fecha}: `, { continued: true }).font('Helvetica').text(fechaTexto);
     doc.moveDown();
 

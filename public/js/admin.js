@@ -66,6 +66,9 @@ function renderPagina() {
     const tdFecha = document.createElement('td');
     tdFecha.textContent = new Date(r.fecha).toLocaleString('es-ES');
 
+    const tdTipo = document.createElement('td');
+    tdTipo.textContent = r.tipo === 'reparacion' ? 'Reparacion' : 'Instalacion';
+
     const tdNombre = document.createElement('td');
     tdNombre.textContent = r.nombre;
 
@@ -91,14 +94,14 @@ function renderPagina() {
 
     tdAcciones.append(link, btnEliminar);
 
-    tr.append(tdCheck, tdFecha, tdNombre, tdDocumento, tdDireccion, tdAcciones);
+    tr.append(tdCheck, tdFecha, tdTipo, tdNombre, tdDocumento, tdDireccion, tdAcciones);
     tbody.appendChild(tr);
   });
 
   if (!registrosPagina.length) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
-    td.colSpan = 6;
+    td.colSpan = 7;
     td.textContent = todosLosRegistros.length ? 'Ningún documento coincide con los filtros.' : 'Aún no hay documentos firmados.';
     tr.appendChild(td);
     tbody.appendChild(tr);

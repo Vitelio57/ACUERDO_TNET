@@ -1,5 +1,6 @@
 const state = {
   idioma: null,
+  tipo: null,
   contenido: null,
 };
 
@@ -7,7 +8,8 @@ const pantallaIdioma = document.getElementById('pantalla-idioma');
 const pantallaReglamento = document.getElementById('pantalla-reglamento');
 const pantallaExito = document.getElementById('pantalla-exito');
 
-const btnEs = document.getElementById('btn-idioma-es');
+const btnInstalacion = document.getElementById('btn-tipo-instalacion');
+const btnReparacion = document.getElementById('btn-tipo-reparacion');
 const textoSeleccionIdioma = document.getElementById('texto-seleccion-idioma');
 const textoIntro = document.getElementById('texto-intro');
 
@@ -21,9 +23,15 @@ const textoDeclaracion = document.getElementById('texto-declaracion');
 const inputNombre = document.getElementById('input-nombre');
 const inputDocumento = document.getElementById('input-documento');
 const inputDireccion = document.getElementById('input-direccion');
+const inputProblema = document.getElementById('input-problema');
 const labelNombre = document.getElementById('label-nombre');
 const labelDocumento = document.getElementById('label-documento');
 const labelDireccion = document.getElementById('label-direccion');
+const labelProblema = document.getElementById('label-problema');
+const campoProblema = document.getElementById('campo-problema');
+const campoCambioRouter = document.getElementById('campo-cambio-router');
+const checkCambioRouter = document.getElementById('check-cambio-router');
+const labelCambioRouter = document.getElementById('label-cambio-router');
 const checkAceptacion = document.getElementById('check-aceptacion');
 const labelAceptacion = document.getElementById('label-aceptacion');
 const labelFirma = document.getElementById('label-firma');
@@ -57,10 +65,11 @@ function resizeCanvas() {
   }
 }
 
-async function cargarIdioma(lang) {
-  const resp = await fetch(`/api/reglamento/${lang}`);
+async function cargarDocumento(tipo) {
+  const resp = await fetch(`/api/documento/${tipo}`);
   const contenido = await resp.json();
   state.idioma = 'es';
+  state.tipo = tipo;
   state.contenido = contenido;
   renderReglamento();
   pantallaIdioma.hidden = true;
@@ -70,9 +79,11 @@ async function cargarIdioma(lang) {
 
 function renderReglamento() {
   const c = state.contenido;
+  const esReparacion = state.tipo === 'reparacion';
   textoSeleccionIdioma.textContent = c.ui.pantallaInicialTitulo;
   textoIntro.textContent = c.ui.pantallaInicialTexto;
-  btnEs.textContent = c.ui.botonContinuar;
+  btnInstalacion.textContent = c.ui.botonInstalacion;
+  btnReparacion.textContent = c.ui.botonReparacion;
   tituloHotel.textContent = c.hotel;
   subtituloEmpresa.textContent = c.empresa;
   tituloDocumento.textContent = c.tituloDocumento;
@@ -91,12 +102,18 @@ function renderReglamento() {
   });
 
   labelNombre.textContent = c.campos.nombre;
-  labelDocumento.textContent = c.campos.documento;
+  labelDocumento.textContent = c.campos.documento || 'N.° de identificacion';
   labelDireccion.textContent = c.campos.direccion;
+  labelProblema.textContent = c.campos.problema || 'Problema reportado';
+  labelCambioRouter.textContent = c.campos.cambioRouter || '';
   labelFirma.textContent = c.ui.firmeAqui;
   labelAceptacion.textContent = c.ui.aceptacion;
   btnLimpiarFirma.textContent = c.ui.botonLimpiarFirma;
   btnFirmar.textContent = c.ui.botonFirmar;
+
+  inputDocumento.parentElement.hidden = esReparacion;
+  campoProblema.hidden = !esReparacion;
+  campoCambioRouter.hidden = !esReparacion;
 
   actualizarDeclaracion();
 }
@@ -106,10 +123,14 @@ function actualizarDeclaracion() {
   const nombre = inputNombre.value.trim() || '_____________';
   const documento = inputDocumento.value.trim() || '_____________';
   const direccion = inputDireccion.value.trim() || '_____________';
+  const problema = inputProblema.value.trim() || '_____________';
+  const cambioRouterEstado = checkCambioRouter.checked ? 'SI' : 'NO';
   textoDeclaracion.textContent = c.declaracion
     .replace(/{{nombre}}/g, nombre)
     .replace(/{{documento}}/g, documento)
-    .replace(/{{direccion}}/g, direccion);
+    .replace(/{{direccion}}/g, direccion)
+    .replace(/{{problema}}/g, problema)
+    .replace(/{{cambioRouterEstado}}/g, cambioRouterEstado);
 }
 
 // Documento y habitación son numéricos: se filtra cualquier caracter que no sea dígito
@@ -123,8 +144,11 @@ function soloDigitos(e) {
 inputNombre.addEventListener('input', actualizarDeclaracion);
 inputDocumento.addEventListener('input', soloDigitos);
 inputDireccion.addEventListener('input', actualizarDeclaracion);
+inputProblema.addEventListener('input', actualizarDeclaracion);
+checkCambioRouter.addEventListener('change', actualizarDeclaracion);
 
-btnEs.addEventListener('click', () => cargarIdioma('es'));
+btnInstalacion.addEventListener('click', () => cargarDocumento('instalacion'));
+btnReparacion.addEventListener('click', () => cargarDocumento('reparacion'));
 
 btnLimpiarFirma.addEventListener('click', () => signaturePad.clear());
 
@@ -140,8 +164,10 @@ btnFirmar.addEventListener('click', async () => {
   const nombre = inputNombre.value.trim();
   const documento = inputDocumento.value.trim();
   const direccion = inputDireccion.value.trim();
+  const problema = inputProblema.value.trim();
+  const esReparacion = state.tipo === 'reparacion';
 
-  if (!nombre || !documento || !direccion) {
+  if (!nombre || !direccion || (!esReparacion && !documento) || (esReparacion && !problema)) {
     mostrarError(c.ui.errorCampos);
     return;
   }
@@ -164,6 +190,9 @@ btnFirmar.addEventListener('click', async () => {
         nombre,
         documento,
         direccion,
+        problema,
+        cambioRouter: checkCambioRouter.checked,
+        tipo: state.tipo,
         idioma: state.idioma,
         aceptado: true,
         firmaBase64,
@@ -197,6 +226,8 @@ btnNuevoDocumento.addEventListener('click', () => {
   inputNombre.value = '';
   inputDocumento.value = '';
   inputDireccion.value = '';
+  inputProblema.value = '';
+  checkCambioRouter.checked = false;
   checkAceptacion.checked = false;
   if (signaturePad) signaturePad.clear();
   mensajeError.hidden = true;

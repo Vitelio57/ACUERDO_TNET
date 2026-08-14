@@ -24,11 +24,12 @@
   <!-- Pantalla 1: inicio -->
   <section id="pantalla-idioma" class="pantalla pantalla-centrada">
     <div class="hero-inicio">
-      <h2 id="texto-seleccion-idioma">Documento de instalacion y resguardo de equipos</h2>
-      <p id="texto-intro">Revise el documento antes de firmar la entrega e instalacion del servicio.</p>
+      <h2 id="texto-seleccion-idioma">Seleccione el tipo de acta</h2>
+      <p id="texto-intro">Elija si va a firmar instalacion o reparacion del servicio.</p>
     </div>
     <div class="botonera-idioma">
-      <button id="btn-idioma-es" class="boton boton-grande" type="button">Continuar</button>
+      <button id="btn-tipo-instalacion" class="boton boton-grande" type="button">Instalacion</button>
+      <button id="btn-tipo-reparacion" class="boton boton-grande" type="button">Reparacion</button>
     </div>
   </section>
 
@@ -60,6 +61,16 @@
         <div class="campo">
           <label id="label-direccion" for="input-direccion"></label>
           <input id="input-direccion" type="text" maxlength="180" autocomplete="off" required />
+        </div>
+
+        <div id="campo-problema" class="campo" hidden>
+          <label id="label-problema" for="input-problema"></label>
+          <input id="input-problema" type="text" maxlength="240" autocomplete="off" />
+        </div>
+
+        <div id="campo-cambio-router" class="campo campo-checkbox" hidden>
+          <input id="check-cambio-router" type="checkbox" />
+          <label id="label-cambio-router" for="check-cambio-router"></label>
         </div>
 
         <div class="campo campo-checkbox">

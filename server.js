@@ -38,7 +38,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 app.get('/api/reglamento/:lang', (req, res) => {
-  res.json(REGLAMENTO.es);
+  res.json(REGLAMENTO.instalacion);
+});
+
+app.get('/api/documento/:tipo', (req, res) => {
+  const tipo = req.params.tipo === 'reparacion' ? 'reparacion' : 'instalacion';
+  res.json(REGLAMENTO[tipo]);
 });
 
 const firmarLimiter = rateLimit({
@@ -50,14 +55,24 @@ const firmarLimiter = rateLimit({
 
 app.post('/api/firmar', firmarLimiter, async (req, res) => {
   try {
-    const { nombre, documento, direccion, habitacion, aceptado, firmaBase64 } = req.body || {};
+    const { nombre, documento, direccion, habitacion, problema, cambioRouter, tipo, aceptado, firmaBase64 } = req.body || {};
+
+    const tipoDoc = tipo === 'reparacion' ? 'reparacion' : 'instalacion';
 
     const nombreLimpio = String(nombre || '').trim().slice(0, 120);
     const documentoLimpio = String(documento || '').trim().slice(0, 60);
     const direccionLimpia = String(direccion || habitacion || '').trim().slice(0, 180);
+    const problemaLimpio = String(problema || '').trim().slice(0, 240);
+    const cambioRouterMarcado = cambioRouter === true;
 
-    if (!nombreLimpio || !documentoLimpio || !direccionLimpia) {
-      return res.status(400).json({ error: 'Nombre, documento de identidad y direccion de instalacion son obligatorios.' });
+    if (!nombreLimpio || !direccionLimpia) {
+      return res.status(400).json({ error: 'Nombre y direccion son obligatorios.' });
+    }
+    if (tipoDoc === 'instalacion' && !documentoLimpio) {
+      return res.status(400).json({ error: 'El documento de identidad es obligatorio para instalacion.' });
+    }
+    if (tipoDoc === 'reparacion' && !problemaLimpio) {
+      return res.status(400).json({ error: 'Debe ingresar el problema reportado para la reparacion.' });
     }
     if (aceptado !== true) {
       return res.status(400).json({ error: 'Debe aceptar el documento antes de firmar.' });
@@ -76,9 +91,12 @@ app.post('/api/firmar', firmarLimiter, async (req, res) => {
 
     const registro = {
       id,
+      tipo: tipoDoc,
       nombre: nombreLimpio,
       documento: documentoLimpio,
       direccion: direccionLimpia,
+      problema: problemaLimpio,
+      cambioRouter: cambioRouterMarcado,
       idioma: 'es',
       fecha: fecha.toISOString(),
     };
