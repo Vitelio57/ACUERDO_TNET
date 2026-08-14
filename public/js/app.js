@@ -116,10 +116,15 @@ function renderReglamento() {
   btnFirmar.textContent = c.ui.botonFirmar;
 
   campoProblema.hidden = !esReparacion;
+  campoProblema.style.display = esReparacion ? '' : 'none';
   campoCambioRouter.hidden = !esReparacion;
+  campoCambioRouter.style.display = esReparacion ? '' : 'none';
 
   if (!esReparacion) {
     inputProblema.value = '';
+    inputProblema.disabled = true;
+  } else {
+    inputProblema.disabled = false;
   }
 
   actualizarDeclaracion();

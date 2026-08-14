@@ -236,6 +236,10 @@ body {
   gap: 6px;
 }
 
+.campo[hidden] {
+  display: none !important;
+}
+
 .campo label {
   font-weight: 600;
   font-size: 0.9rem;
