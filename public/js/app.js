@@ -1,9 +1,16 @@
+const AUTH_KEY = 'acta-gp-admin-auth';
+const ADMIN_PASSWORD = 'Admin#GPON7';
+
 const state = {
   idioma: null,
   tipo: null,
   contenido: null,
 };
 
+const pantallaLogin = document.getElementById('pantalla-login');
+const formularioLogin = document.getElementById('formulario-login');
+const inputPassword = document.getElementById('input-password');
+const mensajeLogin = document.getElementById('mensaje-login');
 const pantallaIdioma = document.getElementById('pantalla-idioma');
 const pantallaReglamento = document.getElementById('pantalla-reglamento');
 const pantallaExito = document.getElementById('pantalla-exito');
@@ -101,7 +108,7 @@ function renderReglamento() {
 
   labelNombre.textContent = c.campos.nombre;
   labelDireccion.textContent = c.campos.direccion;
-  labelProblema.textContent = c.campos.problema || 'Problema reportado';
+  labelProblema.textContent = esReparacion ? (c.campos.problema || 'Problema reportado') : '';
   labelCambioRouter.textContent = c.campos.cambioRouter || '';
   labelFirma.textContent = c.ui.firmeAqui;
   labelAceptacion.textContent = c.ui.aceptacion;
@@ -111,6 +118,10 @@ function renderReglamento() {
   campoProblema.hidden = !esReparacion;
   campoCambioRouter.hidden = !esReparacion;
 
+  if (!esReparacion) {
+    inputProblema.value = '';
+  }
+
   actualizarDeclaracion();
 }
 
@@ -118,7 +129,8 @@ function actualizarDeclaracion() {
   const c = state.contenido;
   const nombre = inputNombre.value.trim() || '_____________';
   const direccion = inputDireccion.value.trim() || '_____________';
-  const problema = inputProblema.value.trim() || '_____________';
+  const esReparacion = state.tipo === 'reparacion';
+  const problema = esReparacion ? (inputProblema.value.trim() || '_____________') : '';
   const cambioRouterEstado = checkCambioRouter.checked ? 'SI' : 'NO';
   textoDeclaracion.textContent = c.declaracion
     .replace(/{{nombre}}/g, nombre)
@@ -131,6 +143,54 @@ inputNombre.addEventListener('input', actualizarDeclaracion);
 inputDireccion.addEventListener('input', actualizarDeclaracion);
 inputProblema.addEventListener('input', actualizarDeclaracion);
 checkCambioRouter.addEventListener('change', actualizarDeclaracion);
+
+async function manejarLogin(password) {
+  try {
+    const resp = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+
+    if (!resp.ok) {
+      throw new Error('Contraseña incorrecta.');
+    }
+
+    localStorage.setItem(AUTH_KEY, 'true');
+    pantallaLogin.hidden = true;
+    pantallaIdioma.hidden = false;
+    mensajeLogin.textContent = '';
+    mensajeLogin.hidden = true;
+    inputPassword.value = '';
+    return true;
+  } catch (err) {
+    mensajeLogin.textContent = err.message || 'Contraseña incorrecta.';
+    mensajeLogin.hidden = false;
+    return false;
+  }
+}
+
+formularioLogin.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const password = inputPassword.value.trim();
+  if (!password) {
+    mensajeLogin.textContent = 'Ingrese la contraseña.';
+    mensajeLogin.hidden = false;
+    return;
+  }
+
+  await manejarLogin(password);
+});
+
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+  pantallaLogin.hidden = true;
+  pantallaIdioma.hidden = false;
+} else {
+  pantallaLogin.hidden = false;
+  pantallaIdioma.hidden = true;
+  pantallaReglamento.hidden = true;
+  pantallaExito.hidden = true;
+}
 
 btnInstalacion.addEventListener('click', () => cargarDocumento('instalacion'));
 btnReparacion.addEventListener('click', () => cargarDocumento('reparacion'));

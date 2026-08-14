@@ -1,10 +1,16 @@
 const POR_PAGINA = 10;
+const AUTH_KEY = 'acta-gp-admin-auth';
 
 let todosLosRegistros = [];
 let filtrados = [];
 let paginaActual = 1;
 const seleccionados = new Set();
 
+const pantallaLoginAdmin = document.getElementById('pantalla-login-admin');
+const formularioLoginAdmin = document.getElementById('formulario-login-admin');
+const inputPasswordAdmin = document.getElementById('input-password-admin');
+const mensajeLoginAdmin = document.getElementById('mensaje-login-admin');
+const pantallaAdmin = document.getElementById('pantalla-admin');
 const inputFiltroNombre = document.getElementById('filtro-nombre');
 const inputFiltroDesde = document.getElementById('filtro-desde');
 const inputFiltroHasta = document.getElementById('filtro-hasta');
@@ -197,5 +203,51 @@ btnEliminarSeleccionados.addEventListener('click', async () => {
   }
 });
 
-cargarDocumentos();
+async function verificarLoginAdmin(password) {
+  try {
+    const resp = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+
+    if (!resp.ok) {
+      throw new Error('Contraseña incorrecta.');
+    }
+
+    localStorage.setItem(AUTH_KEY, 'true');
+    pantallaLoginAdmin.hidden = true;
+    pantallaAdmin.hidden = false;
+    mensajeLoginAdmin.hidden = true;
+    mensajeLoginAdmin.textContent = '';
+    inputPasswordAdmin.value = '';
+    await cargarDocumentos();
+    return true;
+  } catch (err) {
+    mensajeLoginAdmin.textContent = err.message || 'Contraseña incorrecta.';
+    mensajeLoginAdmin.hidden = false;
+    return false;
+  }
+}
+
+formularioLoginAdmin.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const password = inputPasswordAdmin.value.trim();
+  if (!password) {
+    mensajeLoginAdmin.textContent = 'Ingrese la contraseña.';
+    mensajeLoginAdmin.hidden = false;
+    return;
+  }
+
+  await verificarLoginAdmin(password);
+});
+
+if (localStorage.getItem(AUTH_KEY) === 'true') {
+  pantallaLoginAdmin.hidden = true;
+  pantallaAdmin.hidden = false;
+  cargarDocumentos();
+} else {
+  pantallaLoginAdmin.hidden = false;
+  pantallaAdmin.hidden = true;
+}
 

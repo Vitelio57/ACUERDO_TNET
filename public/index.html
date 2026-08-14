@@ -21,8 +21,23 @@
 
 <main class="contenedor">
 
+  <section id="pantalla-login" class="pantalla pantalla-centrada">
+    <div class="hero-inicio login-box">
+      <h2>Ingreso seguro</h2>
+      <p>Ingrese la contraseña para continuar.</p>
+      <form id="formulario-login" class="formulario-login">
+        <div class="campo campo-login">
+          <label for="input-password">Contraseña</label>
+          <input id="input-password" type="password" maxlength="64" autocomplete="current-password" placeholder="Ingrese la contraseña" />
+        </div>
+        <button class="boton boton-grande" type="submit">Entrar</button>
+        <p id="mensaje-login" class="mensaje-error" hidden></p>
+      </form>
+    </div>
+  </section>
+
   <!-- Pantalla 1: inicio -->
-  <section id="pantalla-idioma" class="pantalla pantalla-centrada">
+  <section id="pantalla-idioma" class="pantalla pantalla-centrada" hidden>
     <div class="hero-inicio">
       <h2 id="texto-seleccion-idioma">Seleccione el tipo de acta</h2>
       <p id="texto-intro">Elija si va a firmar instalacion o reparacion del servicio.</p>

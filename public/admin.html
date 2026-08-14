@@ -20,49 +20,66 @@
 </header>
 
 <main class="contenedor">
-  <div class="tarjeta">
-    <div class="barra-filtros">
-      <div class="campo-filtro">
-        <label for="filtro-nombre">Nombre</label>
-        <input id="filtro-nombre" type="text" placeholder="Buscar por nombre..." autocomplete="off" />
-      </div>
-      <div class="campo-filtro">
-        <label for="filtro-desde">Desde</label>
-        <input id="filtro-desde" type="date" />
-      </div>
-      <div class="campo-filtro">
-        <label for="filtro-hasta">Hasta</label>
-        <input id="filtro-hasta" type="date" />
-      </div>
-      <button id="btn-limpiar-filtros" class="boton boton-secundario" type="button">Limpiar filtros</button>
+  <section id="pantalla-login-admin" class="pantalla pantalla-centrada">
+    <div class="hero-inicio login-box">
+      <h2>Ingreso seguro</h2>
+      <p>Ingrese la contraseña para acceder al panel.</p>
+      <form id="formulario-login-admin" class="formulario-login">
+        <div class="campo campo-login">
+          <label for="input-password-admin">Contraseña</label>
+          <input id="input-password-admin" type="password" maxlength="64" autocomplete="current-password" placeholder="Ingrese la contraseña" />
+        </div>
+        <button class="boton boton-grande" type="submit">Entrar</button>
+        <p id="mensaje-login-admin" class="mensaje-error" hidden></p>
+      </form>
     </div>
+  </section>
 
-    <div class="barra-acciones">
-      <button id="btn-eliminar-seleccionados" class="boton-eliminar" type="button" disabled>Eliminar seleccionados (0)</button>
-    </div>
+  <section id="pantalla-admin" class="pantalla" hidden>
+    <div class="tarjeta">
+      <div class="barra-filtros">
+        <div class="campo-filtro">
+          <label for="filtro-nombre">Nombre</label>
+          <input id="filtro-nombre" type="text" placeholder="Buscar por nombre..." autocomplete="off" />
+        </div>
+        <div class="campo-filtro">
+          <label for="filtro-desde">Desde</label>
+          <input id="filtro-desde" type="date" />
+        </div>
+        <div class="campo-filtro">
+          <label for="filtro-hasta">Hasta</label>
+          <input id="filtro-hasta" type="date" />
+        </div>
+        <button id="btn-limpiar-filtros" class="boton boton-secundario" type="button">Limpiar filtros</button>
+      </div>
 
-    <div class="tabla-scroll">
-      <table class="tabla-documentos">
-        <thead>
-          <tr>
-            <th><input id="check-todos" type="checkbox" /></th>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Nombre</th>
-            <th>Direccion</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpo-tabla"></tbody>
-      </table>
-    </div>
+      <div class="barra-acciones">
+        <button id="btn-eliminar-seleccionados" class="boton-eliminar" type="button" disabled>Eliminar seleccionados (0)</button>
+      </div>
 
-    <div class="barra-paginacion">
-      <button id="btn-pagina-anterior" class="boton boton-secundario" type="button">« Anterior</button>
-      <span id="texto-pagina"></span>
-      <button id="btn-pagina-siguiente" class="boton boton-secundario" type="button">Siguiente »</button>
+      <div class="tabla-scroll">
+        <table class="tabla-documentos">
+          <thead>
+            <tr>
+              <th><input id="check-todos" type="checkbox" /></th>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Nombre</th>
+              <th>Direccion</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-tabla"></tbody>
+        </table>
+      </div>
+
+      <div class="barra-paginacion">
+        <button id="btn-pagina-anterior" class="boton boton-secundario" type="button">« Anterior</button>
+        <span id="texto-pagina"></span>
+        <button id="btn-pagina-siguiente" class="boton boton-secundario" type="button">Siguiente »</button>
+      </div>
     </div>
-  </div>
+  </section>
 </main>
 
 <footer class="pie">

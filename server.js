@@ -10,16 +10,14 @@ const crypto = require('crypto');
 const REGLAMENTO = require('./src/reglamento');
 const { generarPdf } = require('./src/pdf');
 const store = require('./src/store');
+const { ADMIN_PASSWORD, validateAdminPassword } = require('./src/auth');
 
 const PORT = process.env.PORT || 8095;
-const ADMIN_DELETE_PASSWORD = process.env.ADMIN_DELETE_PASSWORD || 'Guatemala123456';
+const ADMIN_DELETE_PASSWORD = process.env.ADMIN_DELETE_PASSWORD || ADMIN_PASSWORD;
 const app = express();
 
 function passwordValida(intento) {
-  const a = Buffer.from(String(intento || ''));
-  const b = Buffer.from(ADMIN_DELETE_PASSWORD);
-  if (a.length !== b.length) return false;
-  return crypto.timingSafeEqual(a, b);
+  return validateAdminPassword(intento);
 }
 
 app.disable('x-powered-by');
@@ -44,6 +42,16 @@ app.get('/api/reglamento/:lang', (req, res) => {
 app.get('/api/documento/:tipo', (req, res) => {
   const tipo = req.params.tipo === 'reparacion' ? 'reparacion' : 'instalacion';
   res.json(REGLAMENTO[tipo]);
+});
+
+app.post('/api/auth/verify', (req, res) => {
+  const { password } = req.body || {};
+
+  if (passwordValida(password)) {
+    return res.json({ ok: true });
+  }
+
+  return res.status(401).json({ error: 'Contraseña incorrecta.' });
 });
 
 const firmarLimiter = rateLimit({
